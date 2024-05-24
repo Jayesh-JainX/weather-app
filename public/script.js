@@ -33,6 +33,9 @@ const handleSearch = () => {
         ".weather-details .humidity span"
       );
       const wind = document.querySelector(".weather-details .wind span");
+      const sunrise = json.sys.sunrise;
+      const sunset = json.sys.sunset;
+      const currentTime = json.dt;
 
       if (cityHide.textContent == city) {
         return;
@@ -51,7 +54,12 @@ const handleSearch = () => {
 
         switch (json.weather[0].main) {
           case "Clear":
-            image.src = "image/clear.png";
+            if (currentTime > sunrise && currentTime < sunset) {
+              image.src = "image/clear.png";
+            } else {
+              image.src = "image/night_clear.png";
+            }
+
             break;
           case "Rain":
             image.src = "image/rain.png";
@@ -60,7 +68,12 @@ const handleSearch = () => {
             image.src = "image/snow.png";
             break;
           case "Clouds":
-            image.src = "image/cloud.png";
+            if (currentTime > sunrise && currentTime < sunset) {
+              image.src = "image/cloud.png";
+            } else {
+              image.src = "image/night_cloud.png";
+            }
+
             break;
           case "Mist":
             image.src = "image/mist.png";
@@ -131,8 +144,10 @@ const handleSearch = () => {
     });
 };
 
+// Add event listener for click on search button
 search.addEventListener("click", handleSearch);
 
+// Add event listener for keypress on search input
 searchInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     handleSearch();
